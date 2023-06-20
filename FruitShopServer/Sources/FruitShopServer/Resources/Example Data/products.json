@@ -1,0 +1,181 @@
+[
+    {
+        "title": "Apple",
+        "description": "Apples are a type of fruit that come in a variety of colors, including red, green, and yellow. They are a good source of fiber and Vitamin C, and can be eaten raw or cooked in a variety of dishes. Apples are also used to make juice, cider, and vinegar. Our apples are grown locally and are of the highest quality.",
+        "price": 2.99,
+        "classification": "Pome fruit",
+        "vendor": "Orchard Delights",
+        "imageFileName": "apples.jpg"
+    },
+    {
+        "title": "Apricot",
+        "description": "Apricots are a small, orange fruit with a velvety skin and a sweet, juicy flesh. They are rich in vitamins A and C, as well as potassium and fiber. Apricots can be eaten raw, cooked, or dried. They are often used in jams, jellies, and desserts. The price per kilogram of apricots varies depending on the season and location.",
+        "price": 5.99,
+        "classification": "Stone fruit",
+        "vendor": "Orchard Delights"
+    },
+    {
+        "title": "Avocado",
+        "description": "Avocados are a unique fruit that are high in healthy fats, fiber, and vitamins. They have a creamy, rich texture and a nutty flavor. Avocados are often used in salads, dips, and sandwiches. The price per kilogram of avocados varies depending on the variety and season.",
+        "price": 8.99,
+        "classification": "Berries",
+        "vendor": "Orchard Delights"
+    },
+    {
+        "title": "Banana",
+        "description": "Bananas are a sweet, tropical fruit that come in a yellow or green skin. They are a good source of potassium, Vitamin C, and fiber. Bananas are typically eaten raw, but can also be used in baking and smoothies. Our bananas are imported from tropical regions and are always ripe and ready to eat.",
+        "price": 1.99,
+        "classification": "Berries",
+        "vendor": "Fruitopia Farms",
+        "imageFileName": "bananas.jpg"
+    },
+    {
+        "title": "Orange",
+        "description": "Oranges are a citrus fruit that come in a variety of sizes and colors, including orange, yellow, and green. They are a good source of Vitamin C and fiber, and can be eaten raw or used in juice and cooking. Our oranges are grown locally and are hand-picked to ensure the best quality.",
+        "price": 3.49,
+        "classification": "Citrus fruit",
+        "vendor": "Fruitopia Farms"
+    },
+    {
+        "title": "Grapefruit",
+        "description": "Grapefruits are a large citrus fruit with a slightly sour taste. They are a good source of Vitamin C and fiber, and can be eaten raw or used in juice and cooking. Our grapefruits are imported from tropical regions and are always fresh and juicy.",
+        "price": 4.99,
+        "classification": "Citrus fruit",
+        "vendor": "Fresh Picked Produce Co."
+    },
+    {
+        "title": "Pineapple",
+        "description": "Pineapples are a tropical fruit with a sweet and tangy taste. They are a good source of Vitamin C, fiber, and enzymes that aid digestion. Pineapples are typically eaten raw or used in cooking and smoothies. Our pineapples are imported from tropical regions and are always ripe and delicious.",
+        "price": 6.99,
+        "classification": "Bromeliad",
+        "vendor": "Sunburst Fruits"
+    },
+    {
+        "title": "Strawberry",
+        "description": "Strawberries are a small, sweet fruit that come in a bright red color. They are a good source of Vitamin C, fiber, and antioxidants. Strawberries are typically eaten raw or used in baking and smoothies. Our strawberries are locally grown and are always fresh and juicy.",
+        "price": 8.99,
+        "classification": "Berries",
+        "vendor": "Juicy Harvests Inc."
+    },
+    {
+        "title": "Blueberry",
+        "description": "Blueberries are a small, sweet fruit that come in a blue or purple color. They are a good source of Vitamin C, fiber, and antioxidants. Blueberries are typically eaten raw or used in baking and smoothies. Our blueberries are imported from North America and are always fresh and delicious.",
+        "price": 12.99,
+        "classification": "Berries",
+        "vendor": "Juicy Harvests Inc."
+    },
+    {
+        "title": "Watermelon",
+        "description": "Watermelon is a large, juicy fruit with a sweet, refreshing taste. It is high in vitamins and minerals, and is often eaten in the summertime as a cooling snack. Watermelon can be eaten raw, cooked, or juiced, and the price per kilogram varies depending on the season and location.",
+        "price": 2.49,
+        "classification": "Cucurbit fruit",
+        "vendor": "Juicy Harvests Inc."
+    },
+    {
+        "title": "Kiwi",
+        "description": "Kiwi is a small, oval fruit with a fuzzy brown exterior and a bright green interior. It is rich in vitamin C, fiber, and antioxidants, and is often used in salads, smoothies, and desserts. Kiwi can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 7.99,
+        "classification": "Berries",
+        "vendor": "Fresh Picked Produce Co."
+    },
+    {
+        "title": "Mango",
+        "description": "Mango is a tropical fruit with a sweet, juicy flesh and a tough, fibrous exterior. It is rich in vitamins, minerals, and antioxidants, and is often used in smoothies, salads, and curries. Mango can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 9.99,
+        "classification": "Tropical fruit",
+        "vendor": "Fresh Picked Produce Co."
+    },
+    {
+        "title": "Papaya",
+        "description": "Papaya is a tropical fruit with a soft, orange flesh and a sweet, musky flavor. It is high in vitamins, minerals, and antioxidants, and is often used in salads, smoothies, and desserts. Papaya can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 5.99,
+        "classification": "Tropical fruit",
+        "vendor": "Fresh Picked Produce Co."
+    },
+    {
+        "title": "Dragonfruit",
+        "description": "Dragonfruit is a tropical fruit with a vibrant pink or yellow exterior and a white or pink flesh studded with small black seeds. It is high in vitamin C and antioxidants, and is often used in smoothies, salads, and desserts. Dragonfruit can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 14.99,
+        "classification": "Tropical fruit",
+        "vendor": "Sunburst Fruits",
+        "imageFileName": "dragon fruit.jpg"
+    },
+    {
+        "title": "Guava",
+        "description": "Guava is a small, round fruit with a green or yellow exterior and a pink or white flesh. It is high in vitamin C, fiber, and antioxidants, and is often used in jams, jellies, and desserts. Guava can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 8.99,
+        "classification": "Tropical fruit",
+        "vendor": "Sunburst Fruits"
+    },
+    {
+        "title": "Passionfruit",
+        "description": "Passionfruit is a small, oval fruit with a tough, wrinkled exterior and a gelatinous interior filled with small black seeds. It is high in vitamins and antioxidants, and is often used in smoothies, desserts, and cocktails. Passionfruit can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 16.99,
+        "classification": "Tropical fruit",
+        "vendor": "Sunburst Fruits"
+    },
+    {
+        "title": "Raspberry",
+        "description": "Raspberry is a small, red fruit that grows on thorny bushes. It is high in vitamin C, fiber, and antioxidants, and is often used in jams, jellies, and desserts. Raspberry can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 11.99,
+        "classification": "Berries",
+        "vendor": "Sunburst Fruits"
+    },
+    {
+        "title": "Cherry",
+        "description": "Cherry is a small, red fruit with a sweet and tangy flavor. It is high in vitamin C and antioxidants, and is often used in pies, jams, and desserts. Cherry can be eaten raw or cooked, and the price per kilogram varies depending on the season and location.",
+        "price": 13.99,
+        "classification": "Stone fruit",
+        "vendor": "Sunburst Fruits",
+        "imageFileName": "cherries.jpg"
+    },
+    {
+        "title": "Pear",
+        "description": "Pear is a sweet, juicy fruit with a yellow or green skin and a white, gritty flesh. It is high in fiber and vitamins C and K, and is often eaten raw or used in baked goods, salads, and preserves. Pears can be found in different varieties, with different textures and flavors, and the price per kilogram varies depending on the season and location.",
+        "price": 5.99,
+        "classification": "Pome fruit",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "pears.jpg"
+    },
+    {
+        "title": "Cranberry",
+        "description": "Cranberry is a small, tart fruit with a bright red color. It is high in antioxidants and is often used in juices, sauces, and baked goods. Cranberries are grown in boggy areas and require specific growing conditions, which makes them more expensive than other fruits. The price per kilogram varies depending on the season and location.",
+        "price": 19.99,
+        "classification": "Berries",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "cranberries.jpg"
+    },
+    {
+        "title": "Green Grapes",
+        "description": "Green grapes are a type of grape with a greenish-yellow color and a sweet, juicy flesh. They are often eaten raw or used in fruit salads, jams, and wines. Green grapes are high in vitamins C and K, and are a good source of antioxidants. The price per kilogram varies depending on the season and location, but they are generally more affordable than other types of grapes.",
+        "price": 4.99,
+        "classification": "Berry fruit",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "green grapes.jpg"
+    },
+    {
+        "title": "Horn Cucumber",
+        "description": "The Horn Cucumber, also known as African horned cucumber or kiwano, is a fruit that originates from sub-Saharan Africa. It has a unique appearance, with a spiky, bright orange outer shell and a green, jelly-like flesh with edible seeds. The flavor of horn cucumber is often described as a combination of banana, lime, and cucumber. It is commonly used in salads, smoothies, and cocktails. Horn cucumbers are rich in vitamin C, fiber, and potassium, making them a healthy addition to any diet.",
+        "price": 7.99,
+        "classification": "Cucumis metuliferus",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "horn cucumber.jpg"
+    },
+    {
+        "title": "Kakis",
+        "description": "Kakis, also known as persimmons, are a fruit that originated in China and are now grown in many parts of the world. They have a round or heart-shaped appearance, with a bright orange skin and a sweet, juicy flesh that can range from firm to soft. The flavor of kakis is often described as a combination of peach and apricot, with hints of honey and cinnamon. They are commonly eaten fresh, but can also be used in baking, cooking, and as a topping for salads. Kakis are a good source of fiber, vitamins A and C, and antioxidants.",
+        "price": 4.99,
+        "classification": "Diospyros kaki",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "kakis.jpg"
+    },
+    {
+        "title": "Lemons",
+        "description": "Lemons are a citrus fruit that originated in Asia and are now grown in many parts of the world. They have a bright yellow outer skin and a juicy, acidic flesh that can be tart or sweet depending on the variety. Lemons are commonly used in cooking, baking, and as a flavoring for beverages. They are also a good source of vitamin C and antioxidants. The essential oil extracted from lemon peels is often used in aromatherapy and as a natural cleaning agent.",
+        "price": 2.99,
+        "classification": "Citrus limon",
+        "vendor": "Fresh Picked Produce Co.",
+        "imageFileName": "lemons.jpg"
+    }
+
+]

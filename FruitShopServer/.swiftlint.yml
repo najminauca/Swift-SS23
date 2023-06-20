@@ -1,0 +1,7 @@
+reporter: "xcode"
+
+included:
+  - Source
+
+trailing_comma:
+  mandatory_comma: true
