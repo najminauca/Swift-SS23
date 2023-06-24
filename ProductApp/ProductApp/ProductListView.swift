@@ -117,8 +117,8 @@ struct ProductDetail: View {
                     ProductPic(productId: product.id, width: proxy.size.width - 40, height: proxy.size.height * 0.35)
                     HStack {
                         Text("$\(product.price.description)")
-                            .font(.largeTitle)
-                            .foregroundColor(Color.accentVar)
+                            .font(.title2)
+                            .foregroundColor(Color.secondary)
                         Spacer()
                         NavigationLink(category?.name ?? "") {
                             CategoryDetail(category: category)
@@ -138,6 +138,7 @@ struct ProductDetail: View {
                 }
             }
             .navigationTitle(product.name)
+            .navigationBarTitleDisplayMode(.inline)
             .padding(.horizontal)
             .task {
                 //Get Vendor
