@@ -11,6 +11,9 @@ import AVFoundation
 
 struct ProductListView: View {
     @State var products: [ProductDTO] = []
+    @State var page = 2
+    
+    private var per = 5
     
     var body: some View {
         
@@ -25,7 +28,11 @@ struct ProductListView: View {
                                     Text(product.name).font(.title2)
                                     Text("$"+product.price.description).foregroundColor(.secondary)
                                 }
-                                
+                            }
+                            .task {
+                                if hasReachedEnd(of: product) {
+                                    await loadMoreProducts()
+                                }
                             }
                         }
                     }
@@ -34,14 +41,31 @@ struct ProductListView: View {
             }
         }
         .task {
-            let getProducts = URL(string: "http://127.0.0.1:8080/api/products")
+            let getProducts = URL(string: "http://127.0.0.1:8080/api/products?page=\(1)&per=\(10)")
             let (data, _) = try! await URLSession.shared.data(from: getProducts!)
             let productsDTO = try! JSONDecoder().decode(
                 ProductsDTO.self,
             from: data
             )
             self.products = productsDTO.products
+            page = 2
         }
+    }
+    
+    func loadMoreProducts() async {
+        page += 1
+        
+        let loadMore = URL(string: "http://127.0.0.1:8080/api/products?page=\(page)&per=\(per)")
+        let (data, _) = try! await URLSession.shared.data(from: loadMore!)
+        let productsDTO = try! JSONDecoder().decode(
+            ProductsDTO.self,
+        from: data
+        )
+        self.products += productsDTO.products
+    }
+    
+    func hasReachedEnd(of product: ProductDTO) -> Bool {
+        return products.last?.id == product.id
     }
 }
 
@@ -70,9 +94,12 @@ struct ProductPic: View {
         }
         .task {
             let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productId ?? "")/photo")
-            let (data, _) = try! await URLSession.shared.data(from: url!)
-            
-            self.photoData = UIImage(data: data)
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url!)
+                self.photoData = UIImage(data: data)
+            } catch {
+                print("Photo couldn't be loaded.")
+            }
         }
     }
 }
