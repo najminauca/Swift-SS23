@@ -62,8 +62,8 @@ struct VendorDetail: View {
     }
 }
 
-//struct VendorListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        VendorListView()
-//    }
-//}
+struct VendorListView_Previews: PreviewProvider {
+    static var previews: some View {
+        VendorListView()
+    }
+}

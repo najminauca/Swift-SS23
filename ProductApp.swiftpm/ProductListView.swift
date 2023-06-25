@@ -164,8 +164,8 @@ struct ProductDetail: View {
     
 }
 
-//struct ProductListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProductListView()
-//    }
-//}
+struct ProductListView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProductListView()
+    }
+}
