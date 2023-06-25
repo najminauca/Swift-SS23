@@ -92,14 +92,29 @@ struct ProductPic: View {
             }
         }
         .task {
-            let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productId ?? "")/photo")
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url!)
-                self.photoData = UIImage(data: data)
-            } catch {
-                print("Photo couldn't be loaded.")
+            let cache = getDocumentsDirectory().appendingPathComponent("\(productId ?? "").png")
+            if FileManager.default.fileExists(atPath: cache.path) {
+                print("Loading \(productId ?? "").png from cache")
+                self.photoData = UIImage(contentsOfFile: cache.path)
+            } else {
+                let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productId ?? "")/photo")
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url!)
+                    self.photoData = UIImage(data: data)
+                    if let photoData = photoData?.pngData() {
+                        print("Saving \(productId ?? "").png to cache")
+                        try? photoData.write(to: cache)
+                    }
+                } catch {
+                    print("Photo couldn't be loaded.")
+                }
             }
         }
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 }
 
