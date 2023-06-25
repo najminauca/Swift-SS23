@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import GRDB
+import Combine
 
 struct ContentView: View {
     var body: some View {
@@ -22,12 +24,16 @@ struct ContentView: View {
                 .tabItem {
                     Label("Vendors", systemImage: "person.3.fill")
                 }
+            CartEntryListView()
+                .tabItem {
+                    Label("Cart", systemImage: "cart.fill")
+                }
         }
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}

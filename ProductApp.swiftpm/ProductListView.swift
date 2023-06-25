@@ -16,12 +16,11 @@ struct ProductListView: View {
     private var per = 5
     
     var body: some View {
-        
         NavigationView {
             GeometryReader { proxy in
                 List {
                     ForEach(products) { product in
-                        NavigationLink(destination: ProductDetail(product: product)) {
+                        NavigationLink(destination: ProductDetail(productId: product.id ?? "")) {
                             HStack {
                                 ProductPic(productId: product.id, width: proxy.size.width * 0.3, height: proxy.size.height * 0.15)
                                 VStack(alignment: .leading) {
@@ -105,7 +104,9 @@ struct ProductPic: View {
 }
 
 struct ProductDetail: View {
-    @State var product: ProductDTO
+    @EnvironmentObject private var databaseService: DatabaseService
+    @State var productId: String
+    @State var product: ProductDTO? = nil
     @State var vendor: VendorDTO? = nil
     @State var category: CategoryDTO? = nil
     @State var sheetOpen: Bool = false
@@ -114,36 +115,49 @@ struct ProductDetail: View {
         GeometryReader { proxy in
             ScrollView {
                 VStack(spacing: 15) {
-                    ProductPic(productId: product.id, width: proxy.size.width - 40, height: proxy.size.height * 0.35)
-                    HStack {
-                        Text("$\(product.price.description)")
-                            .font(.title2)
-                            .foregroundColor(Color.secondary)
-                        Spacer()
-                        NavigationLink(category?.name ?? "") {
-                            CategoryDetail(category: category)
-                        }.font(.title3)
+                    if let product = product {
+                        HStack {
+                            Text("\(product.name)")
+                                .font(.largeTitle)
+                                .bold()
+                            Spacer()
+                        }
+                        ProductPic(productId: product.id, width: proxy.size.width - 40, height: proxy.size.height * 0.35)
+                        HStack {
+                            Text("$\(product.price.description)")
+                                .font(.title2)
+                                .foregroundColor(Color.secondary)
+                            Spacer()
+                            NavigationLink(category?.name ?? "") {
+                                CategoryDetail(category: category)
+                            }.font(.title3)
+                        }
+                        
+                        Text(product.description)
+                            .multilineTextAlignment(.leading)
                     }
-                    
-                    Text(product.description)
-                        .multilineTextAlignment(.leading)
                     
                     HStack {
                         NavigationLink(destination: VendorDetail(vendor: vendor)) {
                             Label(vendor?.name ?? "", systemImage: "person.fill")
                         }
                         Spacer()
-                        
                     }
                 }
             }
-            .navigationTitle(product.name)
             .navigationBarTitleDisplayMode(.inline)
             .padding(.horizontal)
             .task {
+                //Get Product
+                let productURL = URL(string: "http://127.0.0.1:8080/api/products/\(productId)")
+                let (productData, _) = try! await URLSession.shared.data(from: productURL!)
+                self.product = try! JSONDecoder().decode(
+                    ProductDTO.self,
+                from: productData
+                )
+                
                 //Get Vendor
-                let vendorURL = URL(string: "http://127.0.0.1:8080/api/vendors/\(product.vendorId)")
-    //            vendorlink?.path = "/" + product.vendorId
+                let vendorURL = URL(string: "http://127.0.0.1:8080/api/vendors/\(product!.vendorId)")
                 let (vendorData, _) = try! await URLSession.shared.data(from: vendorURL!)
                 self.vendor = try! JSONDecoder().decode(
                     VendorDTO.self,
@@ -151,17 +165,23 @@ struct ProductDetail: View {
                 )
                 
                 //Get Category
-                let catURL = URL(string: "http://127.0.0.1:8080/api/categories/\(product.categoryId)")
+                let catURL = URL(string: "http://127.0.0.1:8080/api/categories/\(product!.categoryId)")
                 let (catData, _) = try! await URLSession.shared.data(from: catURL!)
                 self.category = try! JSONDecoder().decode(
                     CategoryDTO.self,
                 from: catData
                 )
             }
+            Button("Add to cart") {
+                databaseService.addNewEntry(of: product!.id ?? "", name: product!.name, price: product!.price)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.large)
+            .tint(.blue)
+            .position(x: proxy.size.width * 0.82, y: proxy.size.height * 0.95)
         }
-        
     }
-    
 }
 
 struct ProductListView_Previews: PreviewProvider {

@@ -19,8 +19,8 @@ let package = Package(
             bundleIdentifier: "de.pruefungsleistung.ProductApp",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .barChart),
-            accentColor: .presetColor(.indigo),
+            appIcon: .asset("AppIcon"),
+            accentColor: .presetColor(.blue),
             supportedDeviceFamilies: [
                 .pad,
                 .phone
@@ -33,9 +33,15 @@ let package = Package(
             ]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/groue/GRDB.swift", "6.11.0"..<"6.12.0")
+    ],
     targets: [
         .executableTarget(
             name: "AppModule",
+            dependencies: [
+                .product(name: "GRDB", package: "grdb.swift")
+            ],
             path: "."
         )
     ]
