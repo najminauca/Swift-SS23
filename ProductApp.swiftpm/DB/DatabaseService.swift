@@ -28,7 +28,7 @@ class DatabaseService: ObservableObject {
         migrator.registerMigration("V1") { db in
             try db.create(table: "CartEntry") { t in
                 t.autoIncrementedPrimaryKey("id")
-                t.column("productId", .text).notNull()
+                t.column("productID", .text).notNull()
                 t.column("name", .text).notNull()
                 t.column("price", .real).notNull()
                 t.column("amount", .integer).notNull()
@@ -38,9 +38,9 @@ class DatabaseService: ObservableObject {
         try! migrator.migrate(queue)
     }
     
-    func addNewEntry(of productId: String, name: String? = nil, price: Decimal? = nil) {
+    func addNewEntry(of productID: String, name: String? = nil, price: Decimal? = nil) {
         let cartEntry: CartEntry? = try! queue.read { db -> CartEntry? in
-            return try! CartEntry.filter(CartEntry.Columns.productId == productId).fetchOne(db)
+            return try! CartEntry.filter(CartEntry.Columns.productID == productID).fetchOne(db)
         }
         
         if let cartEntry = cartEntry {
@@ -51,15 +51,15 @@ class DatabaseService: ObservableObject {
             }
         } else {
             try! queue.write { db in
-                let new = CartEntry(productId: productId, name: name ?? "", price: price ?? 0.0, amount: 1)
+                let new = CartEntry(productID: productID, name: name ?? "", price: price ?? 0.0, amount: 1)
                 try! new.save(db)
             }
         }
     }
     
-    func decreaseAmount(of productId: String) {
+    func decreaseAmount(of productID: String) {
         let cartEntry: CartEntry = try! queue.read { db -> CartEntry in
-            return try! CartEntry.filter(CartEntry.Columns.productId == productId).fetchOne(db)!
+            return try! CartEntry.filter(CartEntry.Columns.productID == productID).fetchOne(db)!
         }
         
         if cartEntry.amount > 1 {
@@ -69,17 +69,23 @@ class DatabaseService: ObservableObject {
                 try! update.save(db)
             }
         } else {
-            deleteEntry(of: productId)
+            deleteEntry(of: productID)
         }
     }
     
-    func deleteEntry(of productId: String) {
+    func deleteEntry(of productID: String) {
         let cartEntry: CartEntry = try! queue.read { db -> CartEntry in
-            return try! CartEntry.filter(CartEntry.Columns.productId == productId).fetchOne(db)!
+            return try! CartEntry.filter(CartEntry.Columns.productID == productID).fetchOne(db)!
         }
         
         try! queue.write { db in
             try! cartEntry.delete(db)
+        }
+    }
+    
+    func deleteAllEntries() {
+        try! queue.write { db in
+            try! CartEntry.deleteAll(db)
         }
     }
 }

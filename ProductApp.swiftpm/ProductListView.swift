@@ -20,12 +20,12 @@ struct ProductListView: View {
             GeometryReader { proxy in
                 List {
                     ForEach(products) { product in
-                        NavigationLink(destination: ProductDetail(productId: product.id ?? "")) {
+                        NavigationLink(destination: ProductDetail(productID: product.id ?? "")) {
                             HStack {
-                                ProductPic(productId: product.id, width: proxy.size.width * 0.3, height: proxy.size.height * 0.15)
+                                ProductPic(productID: product.id, width: proxy.size.width * 0.3, height: proxy.size.height * 0.15)
                                 VStack(alignment: .leading) {
                                     Text(product.name).font(.title2)
-                                    Text("$"+product.price.description).foregroundColor(.secondary)
+                                    Text(product.price.formatted(.currency(code: "USD"))).foregroundColor(.secondary)
                                 }
                             }
                             .task {
@@ -69,7 +69,7 @@ struct ProductListView: View {
 }
 
 struct ProductPic: View {
-    @State var productId: String?
+    @State var productID: String?
     @State var photoData: UIImage? = nil
     @State var width: CGFloat
     @State var height: CGFloat
@@ -92,17 +92,17 @@ struct ProductPic: View {
             }
         }
         .task {
-            let cache = getDocumentsDirectory().appendingPathComponent("\(productId ?? "").png")
+            let cache = getDocumentsDirectory().appendingPathComponent("\(productID ?? "").png")
             if FileManager.default.fileExists(atPath: cache.path) {
-                print("Loading \(productId ?? "").png from cache")
+                print("Loading \(productID ?? "").png from cache")
                 self.photoData = UIImage(contentsOfFile: cache.path)
             } else {
-                let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productId ?? "")/photo")
+                let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productID ?? "")/photo")
                 do {
                     let (data, _) = try await URLSession.shared.data(from: url!)
                     self.photoData = UIImage(data: data)
                     if let photoData = photoData?.pngData() {
-                        print("Saving \(productId ?? "").png to cache")
+                        print("Saving \(productID ?? "").png to cache")
                         try? photoData.write(to: cache)
                     }
                 } catch {
@@ -120,7 +120,7 @@ struct ProductPic: View {
 
 struct ProductDetail: View {
     @EnvironmentObject private var databaseService: DatabaseService
-    @State var productId: String
+    @State var productID: String
     @State var product: ProductDTO? = nil
     @State var vendor: VendorDTO? = nil
     @State var category: CategoryDTO? = nil
@@ -137,9 +137,9 @@ struct ProductDetail: View {
                                 .bold()
                             Spacer()
                         }
-                        ProductPic(productId: product.id, width: proxy.size.width - 40, height: proxy.size.height * 0.35)
+                        ProductPic(productID: product.id, width: proxy.size.width - 40, height: proxy.size.height * 0.35)
                         HStack {
-                            Text("$\(product.price.description)")
+                            Text(product.price.formatted(.currency(code: "USD")))
                                 .font(.title2)
                                 .foregroundColor(Color.secondary)
                             Spacer()
@@ -147,7 +147,15 @@ struct ProductDetail: View {
                                 CategoryDetail(category: category)
                             }.font(.title3)
                         }
-                        
+                        Button(action: {
+                            databaseService.addNewEntry(of: product.id ?? "", name: product.name, price: product.price)
+                        }) {
+                            Text("Add to cart").frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.roundedRectangle)
+                        .controlSize(.large)
+                        .tint(.blue)
                         Text(product.description)
                             .multilineTextAlignment(.leading)
                     }
@@ -164,7 +172,7 @@ struct ProductDetail: View {
             .padding(.horizontal)
             .task {
                 //Get Product
-                let productURL = URL(string: "http://127.0.0.1:8080/api/products/\(productId)")
+                let productURL = URL(string: "http://127.0.0.1:8080/api/products/\(productID)")
                 let (productData, _) = try! await URLSession.shared.data(from: productURL!)
                 self.product = try! JSONDecoder().decode(
                     ProductDTO.self,
@@ -187,14 +195,6 @@ struct ProductDetail: View {
                 from: catData
                 )
             }
-            Button("Add to cart") {
-                databaseService.addNewEntry(of: product!.id ?? "", name: product!.name, price: product!.price)
-            }
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.capsule)
-            .controlSize(.large)
-            .tint(.blue)
-            .position(x: proxy.size.width * 0.82, y: proxy.size.height * 0.95)
         }
     }
 }

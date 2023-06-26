@@ -13,11 +13,11 @@ struct CartEntry: Codable, FetchableRecord, PersistableRecord, Identifiable {
     static var databaseTableName: String = "CartEntry"
     
     var id: Int?
-    var productId: String
+    var productID: String
     var name: String
     var price: Decimal
     var amount: Int
     
-    enum Columns: String, ColumnExpression { case id, productId, name, price, amount
+    enum Columns: String, ColumnExpression { case id, productID, name, price, amount
     }
 }

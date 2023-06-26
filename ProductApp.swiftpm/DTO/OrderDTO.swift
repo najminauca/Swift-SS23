@@ -15,11 +15,11 @@ struct OrdersDTO: Codable {
 struct OrderDTO: Codable, Identifiable {
     var entries: [OrderEntryDTO]
     var id: String?
-    var state: String
+    var state: String?
 }
 
 struct OrderEntryDTO: Codable, Identifiable {
     var amount: Int64
-    var id: String
-    var productId: String
+    var id: String?
+    var productID: String
 }
