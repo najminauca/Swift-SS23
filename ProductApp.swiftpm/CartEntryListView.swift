@@ -160,12 +160,12 @@ struct OrderView: View {
                             Spacer()
                             Spacer()
                         }
-                        .onReceive(timer) { timer in
+                        .onReceive(timer) { _ in
+                            counter += 1
                             if counter == 1 {
                                 databaseService.deleteAllEntries()
                                 presentation.wrappedValue.dismiss()
                             }
-                            counter += 1
                         }
                     }
                 }
@@ -221,7 +221,8 @@ struct OrderView: View {
         let item = PaymentDTO(paypalTransactionId: UUID().uuidString)
         request.httpBody = try! JSONEncoder().encode(item)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let (data, response) = try! await URLSession.shared.data(for: request)
+        let (_, response) = try! await URLSession.shared.data(for: request)
+        print(response)
         withAnimation {
             paid = true
         }
