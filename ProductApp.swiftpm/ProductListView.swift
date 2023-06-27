@@ -20,7 +20,7 @@ struct ProductListView: View {
             GeometryReader { proxy in
                 List {
                     ForEach(products) { product in
-                        NavigationLink(destination: ProductDetail(productID: product.id ?? "")) {
+                        NavigationLink(destination: ProductDetail(productID: product.id)) {
                             HStack {
                                 ProductPic(productID: product.id, width: proxy.size.width * 0.3, height: proxy.size.height * 0.15)
                                 VStack(alignment: .leading) {
@@ -69,7 +69,7 @@ struct ProductListView: View {
 }
 
 struct ProductPic: View {
-    @State var productID: String?
+    @State var productID: String
     @State var photoData: UIImage? = nil
     @State var width: CGFloat
     @State var height: CGFloat
@@ -92,17 +92,17 @@ struct ProductPic: View {
             }
         }
         .task {
-            let cache = getDocumentsDirectory().appendingPathComponent("\(productID ?? "").png")
+            let cache = getDocumentsDirectory().appendingPathComponent("\(productID).png")
             if FileManager.default.fileExists(atPath: cache.path) {
-                print("Loading \(productID ?? "").png from cache")
+//                print("Loading \(productID).png from cache")
                 self.photoData = UIImage(contentsOfFile: cache.path)
             } else {
-                let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productID ?? "")/photo")
+                let url = URL(string: "http://127.0.0.1:8080/api/products/\(self.productID)/photo")
                 do {
                     let (data, _) = try await URLSession.shared.data(from: url!)
                     self.photoData = UIImage(data: data)
                     if let photoData = photoData?.pngData() {
-                        print("Saving \(productID ?? "").png to cache")
+//                        print("Saving \(productID).png to cache")
                         try? photoData.write(to: cache)
                     }
                 } catch {
@@ -125,6 +125,8 @@ struct ProductDetail: View {
     @State var vendor: VendorDTO? = nil
     @State var category: CategoryDTO? = nil
     @State var sheetOpen: Bool = false
+    @State var showVendorLink: Bool = true
+    @State var showCategoryLink: Bool = true
     
     var body: some View {
         GeometryReader { proxy in
@@ -143,12 +145,20 @@ struct ProductDetail: View {
                                 .font(.title2)
                                 .foregroundColor(Color.secondary)
                             Spacer()
-                            NavigationLink(category?.name ?? "") {
-                                CategoryDetail(category: category)
-                            }.font(.title3)
+                            
+                            if let category = category {
+                                if showCategoryLink {
+                                    NavigationLink(category.name) {
+                                        CategoryDetail(category: category)
+                                    }.font(.title3)
+                                } else {
+                                    Text(category.name)
+                                    .font(.title3)
+                                }
+                            }
                         }
                         Button(action: {
-                            databaseService.addNewEntry(of: product.id ?? "", name: product.name, price: product.price)
+                            databaseService.addNewEntry(of: product.id, name: product.name, price: product.price)
                         }) {
                             Text("Add to cart").frame(maxWidth: .infinity)
                         }
@@ -161,8 +171,14 @@ struct ProductDetail: View {
                     }
                     
                     HStack {
-                        NavigationLink(destination: VendorDetail(vendor: vendor)) {
-                            Label(vendor?.name ?? "", systemImage: "person.fill")
+                        if let vendor = vendor {
+                            if showVendorLink {
+                                NavigationLink(destination: VendorDetail(vendor: vendor)) {
+                                    Label(vendor.name, systemImage: "person.fill")
+                                }
+                            } else {
+                                Label(vendor.name, systemImage: "person.fill")
+                            }
                         }
                         Spacer()
                     }

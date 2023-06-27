@@ -86,7 +86,12 @@ struct CartEntryListView: View {
             }
             .sheet(isPresented: $showOrderSheet) {
                 if let order = order {
-                    OrderView(orderID: order.id ?? "")
+                    if #available(iOS 16, *) {
+                        OrderView(orderID: order.id ?? "", price: total)                                .presentationDetents([.fraction(0.2)])
+                            .interactiveDismissDisabled(true)
+                    } else {
+                        OrderView(orderID: order.id ?? "", price: total)
+                    }
                 }
             }
         }
@@ -102,7 +107,7 @@ struct CartEntryListView: View {
         })
         request.httpBody = try! JSONEncoder().encode(item)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let (data, response) = try! await URLSession.shared.data(for: request)
+        let (data, _) = try! await URLSession.shared.data(for: request)
         self.order = try! JSONDecoder().decode(
             OrderDTO.self,
         from: data
@@ -112,27 +117,94 @@ struct CartEntryListView: View {
 
 struct OrderView: View {
     @Environment(\.presentationMode) private var presentation
+    @EnvironmentObject var databaseService: DatabaseService
     @State var orderID: String
+    @State var price: Decimal
+    @State var paid: Bool = false
+    
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var counter = 0
     
     var body: some View {
         NavigationView {
-            List {
-                Button(action: {
-                    Task {
-                        await pay()
+            if #available(iOS 16, *) {
+                List {
+                    if !paid {
+                        VStack(alignment: .center) {
+                            Text("Order Total: \(price.formatted(.currency(code: "USD")))")
+                                .font(.title3)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                            Button(action: {
+                                Task {
+                                    await pay()
+                                }
+                            }) {
+                                Text("Confirm payment").frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle)
+                            .controlSize(.large)
+                            .tint(.blue)
+                        }
+                    } else {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                            Text("Payment Successful")
+                                .font(.title)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                        }
+                        .onReceive(timer) { timer in
+                            if counter == 1 {
+                                databaseService.deleteAllEntries()
+                                presentation.wrappedValue.dismiss()
+                            }
+                            counter += 1
+                        }
                     }
-                }) {
-                    Text("Confirm payment").frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle)
-                .controlSize(.large)
-                .tint(.blue)
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button("Cancel", role: .cancel, action: cancel)
+                .scrollDisabled(true)
+                .toolbar(.hidden)
+            } else {
+                List {
+                    if !paid {
+                        VStack(alignment: .center) {
+                            Text("Order Total: \(price.formatted(.currency(code: "USD")))")
+                                .font(.title3)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                            Button(action: {
+                                Task {
+                                    await pay()
+                                }
+                            }) {
+                                Text("Confirm payment").frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.roundedRectangle)
+                            .controlSize(.large)
+                            .tint(.blue)
+                        }
+                    } else {
+                        VStack(alignment: .center) {
+                            Spacer()
+                            Spacer()
+                            Text("Payment Successful")
+                                .font(.title)
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                            Spacer()
+                            Spacer()
+                        }
+                    }
                 }
+                .navigationBarBackButtonHidden(true)
             }
         }
     }
@@ -150,6 +222,9 @@ struct OrderView: View {
         request.httpBody = try! JSONEncoder().encode(item)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let (data, response) = try! await URLSession.shared.data(for: request)
+        withAnimation {
+            paid = true
+        }
     }
 }
 

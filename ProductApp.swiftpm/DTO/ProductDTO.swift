@@ -14,7 +14,7 @@ struct ProductsDTO: Codable {
 
 struct ProductDTO: Codable, Identifiable {
     var vendorId: String
-    var id: String?
+    var id: String
     var categoryId: String
     var description: String
     var name: String
