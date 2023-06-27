@@ -9,6 +9,11 @@ import SwiftUI
 
 struct CategoryListView: View {
     @State var categories: [CategoryDTO] = []
+    
+    @State var page = 2
+    
+    private var per = 5
+    
     var body: some View {
         NavigationView {
             List {
@@ -17,6 +22,11 @@ struct CategoryListView: View {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(category.name)
+                            }
+                        }
+                        .task {
+                            if hasReachedEnd(of: category) {
+                                await loadMoreCategories()
                             }
                         }
                     }
@@ -32,7 +42,25 @@ struct CategoryListView: View {
             from: data
             )
             self.categories = categoriesDTO.categories
+            page = 2
+            await loadMoreCategories()
         }
+    }
+    
+    func loadMoreCategories() async {
+        page += 1
+        
+        let loadMore = URL(string: "http://127.0.0.1:8080/api/categories?page=\(page)&per=\(per)")
+        let (data, _) = try! await URLSession.shared.data(from: loadMore!)
+        let categoriesDTO = try! JSONDecoder().decode(
+            CategoriesDTO.self,
+        from: data
+        )
+        self.categories += categoriesDTO.categories
+    }
+    
+    func hasReachedEnd(of category: CategoryDTO) -> Bool {
+        return categories.last?.id == category.id
     }
 }
 
@@ -85,7 +113,6 @@ struct CategoryDetail: View {
                     page += 1
                 }
             }
-            
         }
     }
 }
