@@ -65,9 +65,8 @@ struct OrderListView: View {
             OrdersDTO.self,
         from: data
         )
-        self.orders = ordersDTO.orders.sorted {
-            $0.state > $1.state
-        }
+        self.orders = ordersDTO.orders
+        
         page = 2
     }
     
@@ -81,9 +80,6 @@ struct OrderListView: View {
         from: data
         )
         self.orders += ordersDTO.orders
-        self.orders = self.orders.sorted {
-            $0.state > $1.state
-        }
     }
     
     func hasReachedEnd(of order: OrderDTO) -> Bool {
