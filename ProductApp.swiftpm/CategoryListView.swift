@@ -21,12 +21,14 @@ struct CategoryListView: View {
                     NavigationLink(destination: CategoryDetail(category: category)) {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text(category.name)
+                                Text(category.name).font(.title2)
                             }
                         }
-                        .task {
+                        .onAppear {
                             if hasReachedEnd(of: category) {
-                                await loadMoreCategories()
+                                Task {
+                                    await loadMoreCategories()
+                                }
                             }
                         }
                     }
@@ -34,16 +36,18 @@ struct CategoryListView: View {
             }
             .navigationTitle("Categories")
         }
-        .task {
-            let getCategories = URL(string: "http://127.0.0.1:8080/api/categories")
-            let (data, _) = try! await URLSession.shared.data(from: getCategories!)
-            let categoriesDTO = try! JSONDecoder().decode(
-                CategoriesDTO.self,
-            from: data
-            )
-            self.categories = categoriesDTO.categories
-            page = 2
-            await loadMoreCategories()
+        .onAppear {
+            Task {
+                self.categories = []
+                let getCategories = URL(string: "http://127.0.0.1:8080/api/categories?page=\(1)&per=\(10)")
+                let (data, _) = try! await URLSession.shared.data(from: getCategories!)
+                let categoriesDTO = try! JSONDecoder().decode(
+                    CategoriesDTO.self,
+                from: data
+                )
+                self.categories = categoriesDTO.categories
+                page = 2
+            }
         }
     }
     

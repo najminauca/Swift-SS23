@@ -10,6 +10,10 @@ import SwiftUI
 struct VendorListView: View {
     @State var vendors: [VendorDTO] = []
     
+    @State var page = 2
+    
+    private var per = 5
+    
     var body: some View {
         NavigationView {
             List {
@@ -17,7 +21,14 @@ struct VendorListView: View {
                     NavigationLink(destination: VendorDetail(vendor: vendor)) {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text(vendor.name)
+                                Text(vendor.name).font(.title2)
+                            }
+                        }
+                        .onAppear {
+                            if hasReachedEnd(of: vendor) {
+                                Task {
+                                    await loadMoreVendors()
+                                }
                             }
                         }
                     }
@@ -25,15 +36,35 @@ struct VendorListView: View {
             }
             .navigationTitle("Vendors")
         }        
-        .task {
-            let getVendors = URL(string: "http://127.0.0.1:8080/api/vendors")
-            let (data, _) = try! await URLSession.shared.data(from: getVendors!)
-            let vendorsDTO = try! JSONDecoder().decode(
-                VendorsDTO.self,
-            from: data
-            )
-            self.vendors = vendorsDTO.vendors
+        .onAppear {
+            Task {
+                self.vendors = []
+                let getVendors = URL(string: "http://127.0.0.1:8080/api/vendors?page=\(1)&per=\(10)")
+                let (data, _) = try! await URLSession.shared.data(from: getVendors!)
+                let vendorsDTO = try! JSONDecoder().decode(
+                    VendorsDTO.self,
+                from: data
+                )
+                self.vendors = vendorsDTO.vendors
+                page = 2
+            }
         }
+    }
+    
+    func loadMoreVendors() async {
+        page += 1
+        
+        let loadMore = URL(string: "http://127.0.0.1:8080/api/vendors?page=\(page)&per=\(per)")
+        let (data, _) = try! await URLSession.shared.data(from: loadMore!)
+        let vendorsDTO = try! JSONDecoder().decode(
+            VendorsDTO.self,
+        from: data
+        )
+        self.vendors += vendorsDTO.vendors
+    }
+    
+    func hasReachedEnd(of vendor: VendorDTO) -> Bool {
+        return vendors.last?.id == vendor.id
     }
 }
 

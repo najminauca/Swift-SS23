@@ -28,9 +28,11 @@ struct ProductListView: View {
                                     Text(product.price.formatted(.currency(code: "USD"))).foregroundColor(.secondary)
                                 }
                             }
-                            .task {
+                            .onAppear {
                                 if hasReachedEnd(of: product) {
-                                    await loadMoreProducts()
+                                    Task {
+                                        await loadMoreProducts()
+                                    }
                                 }
                             }
                         }
@@ -39,15 +41,18 @@ struct ProductListView: View {
                 .navigationTitle("Products")
             }
         }
-        .task {
-            let getProducts = URL(string: "http://127.0.0.1:8080/api/products?page=\(1)&per=\(10)")
-            let (data, _) = try! await URLSession.shared.data(from: getProducts!)
-            let productsDTO = try! JSONDecoder().decode(
-                ProductsDTO.self,
-            from: data
-            )
-            self.products = productsDTO.products
-            page = 2
+        .onAppear {
+            Task {
+                self.products = []
+                let getProducts = URL(string: "http://127.0.0.1:8080/api/products?page=\(1)&per=\(10)")
+                let (data, _) = try! await URLSession.shared.data(from: getProducts!)
+                let productsDTO = try! JSONDecoder().decode(
+                    ProductsDTO.self,
+                from: data
+                )
+                self.products = productsDTO.products
+                page = 2
+            }
         }
     }
     
